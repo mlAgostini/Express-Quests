@@ -37,15 +37,27 @@ const getMovies = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error retrieving data from database");
+      res.status(500).send("Error retrieving data movies from database");
     });
 };
+
+const getUsers = (req, res) => {
+  database
+    .query("SELECT * FROM users")
+    .then(([users]) => {
+      res.json(users);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error retrieving data users from database");
+    })
+}
 
 const getMovieById = (req, res) => {
   const id = parseInt(req.params.id);
 
   database
-    .query("select * from movies where id = ?", [id])
+    .query("SELECT * FROM movies WHERE ID = ?", [id])
     .then(([movies]) => {
       if (movies[0] != null) {
         res.json(movies[0]);
@@ -55,11 +67,53 @@ const getMovieById = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error retrieving data from database");
+      res.status(500).send("Error retrieving data movie from database");
     });
 };
+
+const getUserById = (req, res) => {
+  const id = parseInt(req.params.id);
+
+  database
+    .query("SELECT * FROM users WHERE ID = ?", [id])
+    .then(([users]) => {
+      if (users[0] !=null) {
+        res.json(users[0]);
+      } else {
+        res.status(404).send("Not Found");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error retrieving data user from database");
+    })
+}
+
+const postMovie = (req, res) => {
+  const { title, director, year, color, duration } = req.body;
+  res.send("Post route is working, yeah 🎉");
+
+  database
+    .query(
+      "INSERT INTO movies(title, director, year, color, duration) VALUES (?, ?, ?, ?, ?)",
+      [title, director, year, color, duration]
+    )
+    .then(([result]) => {
+      res.location(`/api/movies/${result.insertId}`).sendStatus(201);
+      console.log(result.insertId);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error saving the movie");
+    });
+};
+
+
 
 module.exports = {
   getMovies,
   getMovieById,
+  postMovie,
+  getUsers,
+  getUserById,
 };
