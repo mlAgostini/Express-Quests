@@ -77,7 +77,7 @@ const getUserById = (req, res) => {
   database
     .query("SELECT * FROM users WHERE ID = ?", [id])
     .then(([users]) => {
-      if (users[0] !=null) {
+      if (users[0] != null) {
         res.json(users[0]);
       } else {
         res.status(404).send("Not Found");
@@ -100,11 +100,28 @@ const postMovie = (req, res) => {
     )
     .then(([result]) => {
       res.location(`/api/movies/${result.insertId}`).sendStatus(201);
-      console.log(result.insertId);
     })
     .catch((err) => {
       console.error(err);
       res.status(500).send("Error saving the movie");
+    });
+};
+
+const postUser = (req, res) => {
+  const { firstname, lastname, email, city, language } = req.body;
+  res.send("Post route is working, nice !");
+
+  database
+    .query(
+      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+      [firstname, lastname, email, city, language]
+    )
+    .then(([result]) => {
+      res.location(`/api/users/${result.insertId}`).sendStatus(201);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error saving the user");
     });
 };
 
@@ -116,4 +133,5 @@ module.exports = {
   postMovie,
   getUsers,
   getUserById,
+  postUser,
 };
