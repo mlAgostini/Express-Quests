@@ -2,8 +2,25 @@ const database = require("./database");
 
 // METHOD GET USERS
 const getUsers = (req, res) => {
+    let sql = "SELECT * FROM users";
+    const sqlValues = [];
+
+    // Filtre via query.string
+    if (req.query.language != null) {
+        sql += " WHERE language = ?";
+        sqlValues.push(req.query.language);
+    }
+    if (req.query.city != null) {
+        sql += " AND city = ? ";
+        sqlValues.push(req.query.max_duration);
+      }
+    else if (req.query.city != null) {
+        sql += " WHERE city = ?";
+        sqlValues.push(req.query.city)
+    }
+
     database
-        .query("SELECT * FROM users")
+        .query(sql, sqlValues)
         .then(([users]) => {
             res.json(users);
         })
@@ -59,7 +76,7 @@ const updateUser = (req, res) => {
     database
         .query(
             "UPDATE users SET firstname = ?, lastname = ?, email = ?, city = ?, language = ?, WHERE id = ?",
-            [ firstname, lastname, email, city, language, id]
+            [firstname, lastname, email, city, language, id]
         )
         .then(([result]) => {
             if (result.affectedRows === 0) {
@@ -68,7 +85,7 @@ const updateUser = (req, res) => {
                 res.sendStatus(204);
             }
         })
-        .catch((err) =>{
+        .catch((err) => {
             console.error(err);
             res.status(500).send("Error editing the user");
         });
@@ -77,23 +94,23 @@ const updateUser = (req, res) => {
 // METHOD DELETE USER
 const deleteUser = (req, res) => {
     const id = parseInt(req.params.id);
-  
+
     database
-      .query(
-        "DELETE FROM users WHERE id = ?", [id]
-      )
-      .then(([result]) => {
-        if (result.affectedRows === 0) {
-          res.status(404).send("Not Found");
-        } else {
-          res.sendStatus(204);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error deleting the user");
-      });
-  }
+        .query(
+            "DELETE FROM users WHERE id = ?", [id]
+        )
+        .then(([result]) => {
+            if (result.affectedRows === 0) {
+                res.status(404).send("Not Found");
+            } else {
+                res.sendStatus(204);
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error deleting the user");
+        });
+}
 
 module.exports = {
     getUsers,
