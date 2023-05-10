@@ -1,5 +1,6 @@
 const database = require("./database");
 
+// METHOD GET USERS
 const getUsers = (req, res) => {
     database
         .query("SELECT * FROM users")
@@ -12,6 +13,7 @@ const getUsers = (req, res) => {
         })
 }
 
+// METHOD GET USER BY ID
 const getUserById = (req, res) => {
     const id = parseInt(req.params.id);
 
@@ -30,6 +32,7 @@ const getUserById = (req, res) => {
         })
 }
 
+// METHOD POST USER
 const postUser = (req, res) => {
     const { firstname, lastname, email, city, language } = req.body;
     res.send("Post route is working, nice !");
@@ -48,6 +51,7 @@ const postUser = (req, res) => {
         });
 };
 
+// METHOD PUT USER
 const updateUser = (req, res) => {
     const id = parseInt(req.params.id);
     const { firstname, lastname, email, city, language } = req.body;

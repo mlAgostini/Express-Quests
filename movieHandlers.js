@@ -1,6 +1,6 @@
 const database = require("./database");
 
-
+// METHOD GET MOVIES
 const getMovies = (req, res) => {
   database
     .query("select * from movies")
@@ -13,6 +13,7 @@ const getMovies = (req, res) => {
     });
 };
 
+// METHOD GET MOVIE BY ID
 const getMovieById = (req, res) => {
   const id = parseInt(req.params.id);
 
@@ -31,6 +32,7 @@ const getMovieById = (req, res) => {
     });
 };
 
+// METHOD POST MOVIE
 const postMovie = (req, res) => {
   const { title, director, year, color, duration } = req.body;
   res.send("Post route is working, yeah 🎉");
@@ -49,6 +51,7 @@ const postMovie = (req, res) => {
     });
 };
 
+// METHOD PUT MOVIE
 const updateMovie = (req, res) => {
   const id = parseInt(req.params.id);
   const { title, director, year, color, duration } = req.body;

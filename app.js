@@ -18,19 +18,22 @@ const welcome = (req, res) => {
 
 app.get("/", welcome);
 
+// Appel des fonctions
 const movieHandlers = require("./movieHandlers");
 const userHandlers = require("./userHandlers");
+const validateMovie = require("./validators");
+const validateUser = require("./validators");
 
 // Routes Movies
 app.get("/api/movies", movieHandlers.getMovies);
 app.get("/api/movies/:id", movieHandlers.getMovieById);
-app.post("/api/movies", movieHandlers.postMovie);
-app.put("/api/movies/:id", movieHandlers.updateMovie);
+app.post("/api/movies", validateMovie, movieHandlers.postMovie);
+app.put("/api/movies/:id", validateMovie, movieHandlers.updateMovie);
 
 // Routes Users
 app.get("/api/users", userHandlers.getUsers);
 app.get("/api/users/:id", userHandlers.getUserById);
-app.post("/api/users", userHandlers.postUser);
-app.put("/api/users/:id", userHandlers.updateUser);
+app.post("/api/users", validateUser, userHandlers.postUser);
+app.put("/api/users/:id", validateUser, userHandlers.updateUser);
 
 
