@@ -23,6 +23,7 @@ const movieHandlers = require("./movieHandlers");
 const userHandlers = require("./userHandlers");
 const validateMovie = require("./validators");
 const validateUser = require("./validators");
+const { hashPassword } = require("./auth");
 
 // Routes Movies
 app.get("/api/movies", movieHandlers.getMovies);
@@ -34,7 +35,7 @@ app.delete("/api/movies/:id", movieHandlers.deleteMovie);
 // Routes Users
 app.get("/api/users", userHandlers.getUsers);
 app.get("/api/users/:id", userHandlers.getUserById);
-app.post("/api/users", userHandlers.postUser);
+app.post("/api/users", hashPassword, userHandlers.postUser);
 app.put("/api/users/:id", userHandlers.updateUser);
 app.delete("/api/users/:id", userHandlers.deleteUser);
 

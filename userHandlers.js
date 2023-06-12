@@ -51,32 +51,33 @@ const getUserById = (req, res) => {
 
 // METHOD POST USER
 const postUser = (req, res) => {
-    const { firstname, lastname, email, city, language } = req.body;
+    const { firstname, lastname, email, city, language, hashedPassword } = req.body;
     res.send("Post route is working, nice !");
 
     database
         .query(
-            "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
-            [firstname, lastname, email, city, language]
+            "INSERT INTO users(firstname, lastname, email, city, language, hashedPassword) VALUES (?, ?, ?, ?, ?, ?)",
+            [firstname, lastname, email, city, language, hashedPassword]
         )
         .then(([result]) => {
-            res.location(`/api/users/${result.insertId}`).sendStatus(201);
+            res.send(result);
+            //res.send(`/api/users/${result.insertId}`);
         })
         .catch((err) => {
             console.error(err);
-            res.status(500).send("Error saving the user");
+            res.status(500);
         });
 };
 
 // METHOD PUT USER
 const updateUser = (req, res) => {
     const id = parseInt(req.params.id);
-    const { firstname, lastname, email, city, language } = req.body;
+    const { firstname, lastname, email, city, language, hashedPassword } = req.body;
 
     database
         .query(
-            "UPDATE users SET firstname = ?, lastname = ?, email = ?, city = ?, language = ?, WHERE id = ?",
-            [firstname, lastname, email, city, language, id]
+            "UPDATE users SET firstname = ?, lastname = ?, email = ?, city = ?, language = ?, hashedPassword = ?, WHERE id = ?",
+            [firstname, lastname, email, city, language, hashedPassword, id]
         )
         .then(([result]) => {
             if (result.affectedRows === 0) {
